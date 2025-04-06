@@ -6,6 +6,6 @@
   "className": "red",
   "link": null,
   "customProps": {
-    "description": "This description can be used in the swizzled DocCard"
+    "description": "Generate and customize QR codes for various use cases"
   }
 }
