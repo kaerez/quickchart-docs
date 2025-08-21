@@ -27,6 +27,7 @@ https://quickchart.io/barcode?type=datamatrix&text=foo
 | ------------- | -------- | ------------------------------------------------------------------------ | ----------------------------------------------------- |
 | `type`        | Yes      | Specifies the type of barcode to generate (see list below).              |                                                       |
 | `text`        | Yes      | The data or text you want to encode in the barcode.                      |                                                       |
+| `format`      | No       | Output format for the barcode. Defaults to `png`.                        | `png`, `svg`                                          |
 | `width`       | No       | Desired width of the barcode in pixels.                                  |                                                       |
 | `height`      | No       | Desired height of the barcode in pixels.                                 |                                                       |
 | `scale`       | No       | A scaling factor for the barcode, affecting both width and height.       |                                                       |
@@ -61,6 +62,14 @@ To generate a barcode that includes human-readable text and is rotated 90 degree
 
 ```
 https://quickchart.io/barcode?type=upca&text=12345678900&includeText=true&rotate=R
+```
+
+### SVG Format Barcode
+
+To generate a barcode in SVG format instead of PNG:
+
+```
+https://quickchart.io/barcode?type=code128&text=SVG-Example&format=svg
 ```
 
 ## QR codes
