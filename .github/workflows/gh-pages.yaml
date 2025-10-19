@@ -62,12 +62,12 @@ jobs:
           # 1. Remove all import statements that reference missing files.
           find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/import.*'@site\//d"
 
-          # 2. Remove all lines that use the broken components. This is safer than trying to parse the tags.
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<Author/d"
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<Image/d"
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<CodeWithHighlights/d"
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<ChartExample/d"
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<GoogleImageChartsTutorialCallout/d"
+          # 2. Remove multi-line component usages. This finds the opening tag and deletes until the closing tag.
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i '/<Author/,/\/>/d'
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i '/<Image/,/\/>/d'
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i '/<CodeWithHighlights/,/\/>/d'
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i '/<ChartExample/,/\/>/d'
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i '/<GoogleImageChartsTutorialCallout/,/\/>/d'
       
       - name: Build website
         run: yarn build
