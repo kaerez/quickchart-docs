@@ -57,17 +57,18 @@ jobs:
       - name: Remove references to missing components and images
         run: |
           # This script robustly cleans the broken upstream repository before building.
-          # It removes all imports and usages of missing custom components and images.
+          # It removes all imports and usages of missing custom components and images using Perl for better multi-line handling.
           
           # 1. Remove all import statements that reference missing files.
           find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/import.*'@site\//d"
 
-          # 2. Remove multi-line component usages. This finds the opening tag and deletes until the closing tag.
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i '/<Author/,/\/>/d'
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i '/<Image/,/\/>/d'
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i '/<CodeWithHighlights/,/\/>/d'
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i '/<ChartExample/,/\/>/d'
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i '/<GoogleImageChartsTutorialCallout/,/\/>/d'
+          # 2. Use Perl to remove multi-line component usages (both self-closing and block-level).
+          # This is much safer than line-based sed and prevents malformed MDX errors.
+          COMPONENTS_TO_REMOVE='(Author|Image|CodeWithHighlights|ChartExample|GoogleImageChartsTutorialCallout)'
+          # Remove block components like <Component>...</Component>
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 perl -i -p0e "s/<${COMPONENTS_TO_REMOVE}\b[^>]*>.*?<\/\1>//sg"
+          # Remove self-closing components like <Component />
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 perl -i -p0e "s/<${COMPONENTS_TO_REMOVE}\b[^>]*\/>//sg"
       
       - name: Build website
         run: yarn build
