@@ -53,12 +53,27 @@ jobs:
           # This command finds all markdown files and replaces every instance of '/documentation/' with '/',
           # which is the correct root path for the deployed site.
           find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i 's|/documentation/|/|g'
+
+      - name: Disable missing components and images
+        run: |
+          # This script robustly cleans the broken upstream repository before building.
+          # It finds and comments out all references to missing components and images.
+          # This prevents "Module not found" and MDX parsing errors.
+          
+          # 1. Remove all import statements that reference missing files.
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/import.*'@site\//d"
+
+          # 2. Use Perl to wrap component usages in MDX comments {/* ... */}.
+          # This is much safer than deleting lines and prevents malformed MDX errors.
+          COMPONENTS_TO_REMOVE='(Author|Image|CodeWithHighlights|ChartExample|GoogleImageChartsTutorialCallout)'
+          # Comment out block components: <Component>...</Component> -> {/* <Component>...</Component> */}
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 perl -i -p0e "s/(<${COMPONENTS_TO_REMOVE}\b[^>]*>.*?<\/\1>)/{\/\* \1 \*\/}/sg"
+          # Comment out self-closing components: <Component /> -> {/* <Component /> */}
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 perl -i -p0e "s/(<${COMPONENTS_TO_REMOVE}\b[^>]*\/>)/{\/\* \1 \*\/}/sg"
       
       - name: Build website
-        # This is the definitive fix. We are telling Docusaurus to ignore all the broken
-        # component references from the upstream repository. This prevents the build from
-        # crashing and is much more reliable than trying to clean the files with scripts.
-        run: yarn build --no-fail-on-warnings --on-broken-links ignore
+        # The --on-broken-links ignore flag is still needed for some remaining link issues.
+        run: yarn build --on-broken-links ignore
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
