@@ -50,11 +50,10 @@ jobs:
 
       - name: Fix broken links automatically
         run: |
-          # This command finds all markdown files and runs two "search and replace" operations on them.
-          # 1. It fixes links to subpages, e.g., changing '](/documentation/qr-codes)' to '](/qr-codes)'.
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i 's|](/documentation/|](/|g'
-          # 2. It fixes links to the old root, e.g., changing '](/documentation)' to '](/)' which correctly points to the new root.
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i 's|](/documentation)|](/)|g'
+          # This command finds all markdown files and replaces every instance of '/documentation/' with '/',
+          # which is the correct root path for the deployed site. This is a more robust fix
+          # that handles all link formats (markdown, HTML, etc.) at once.
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i 's|/documentation/|/|g'
       
       - name: Build website
         run: yarn build
