@@ -138,7 +138,7 @@ mixpanel.init('652c6ab04d3d810b2c40261c54e3106e');
             items: [
               {
                 label: 'Get started',
-                to: '/documentation/',
+                to: '//',
               },
               {
                 label: 'Chart gallery',
@@ -150,11 +150,11 @@ mixpanel.init('652c6ab04d3d810b2c40261c54e3106e');
               },
               {
                 label: 'Integrations',
-                to: '/documentation/category/integrations/',
+                to: '/category/integrations/',
               },
               {
                 label: 'QR codes',
-                to: '/documentation/qr-codes/',
+                to: '/qr-codes/',
               },
             ],
           },
