@@ -102,7 +102,7 @@ mixpanel.init('652c6ab04d3d810b2c40261c54e3106e');
         title: 'QuickChart',
         logo: {
           alt: 'QuickChart logo',
-          src: 'https://kaerez.github.io/quickchart-docs/bar_chart_logo.svg',
+          src: 'img/bar_chart_logo.svg',
           width: 26,
           height: 26,
         },
