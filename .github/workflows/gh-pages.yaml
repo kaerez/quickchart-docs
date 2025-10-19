@@ -55,6 +55,12 @@ jobs:
           # that handles all link formats (markdown, HTML, etc.) at once.
           find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i 's|/documentation/|/|g'
       
+      - name: List contents of src/components directory
+        run: |
+          echo "--- Listing contents of src/components ---"
+          ls -R src/components
+          echo "----------------------------------------"
+
       - name: Build website
         run: yarn build
 
