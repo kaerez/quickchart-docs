@@ -51,16 +51,25 @@ jobs:
       - name: Fix broken links automatically
         run: |
           # This command finds all markdown files and replaces every instance of '/documentation/' with '/',
-          # which is the correct root path for the deployed site. This is a more robust fix
-          # that handles all link formats (markdown, HTML, etc.) at once.
+          # which is the correct root path for the deployed site.
           find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i 's|/documentation/|/|g'
-      
-      - name: List contents of src/components directory
-        run: |
-          echo "--- Listing contents of src/components ---"
-          ls -R src/components
-          echo "----------------------------------------"
 
+      - name: Remove references to missing components
+        run: |
+          # This script finds all markdown files and removes the import statements and the usage
+          # of custom React components that are missing from the src directory.
+          # This is necessary because the upstream repository is in a broken state.
+          
+          # Remove import statements
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/import.*'@site\/components\//d"
+
+          # Remove component usages
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<Author/,/ \/>/d"
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<Image/,/ \/>/d"
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<CodeWithHighlights/,/ \/>/d"
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<ChartExample/,/ \/>/d"
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<GoogleImageChartsTutorialCallout/,/ \/>/d"
+      
       - name: Build website
         run: yarn build
 
