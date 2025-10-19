@@ -8,8 +8,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'QuickChart',
   tagline: 'Generate chart images with a simple, open API',
-  url: 'https://quickchart.io/',
-  baseUrl: '/documentation/',
+  url: 'https://kaerez.github.io',
+  baseUrl: '/quickchart-docs/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'throw',
   onDuplicateRoutes: 'throw',
@@ -67,7 +67,7 @@ mixpanel.init('652c6ab04d3d810b2c40261c54e3106e');
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/typpo/quickchart-docs',
+          editUrl: 'https://github.com/kaerez/quickchart-docs',
           path: 'documentation',
           routeBasePath: '/',
           breadcrumbs: false,
@@ -102,7 +102,7 @@ mixpanel.init('652c6ab04d3d810b2c40261c54e3106e');
         title: 'QuickChart',
         logo: {
           alt: 'QuickChart logo',
-          src: 'https://quickchart.io/images/bar_chart_logo.svg',
+          src: 'https://kaerez.github.io/quickchart-docs/bar_chart_logo.svg',
           width: 26,
           height: 26,
         },
