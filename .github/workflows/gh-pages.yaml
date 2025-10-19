@@ -54,21 +54,20 @@ jobs:
           # which is the correct root path for the deployed site.
           find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i 's|/documentation/|/|g'
 
-      - name: Remove references to missing components
+      - name: Remove references to missing components and images
         run: |
-          # This script finds all markdown files and removes the import statements and the usage
-          # of custom React components that are missing from the src directory.
-          # This is necessary because the upstream repository is in a broken state.
+          # This script robustly cleans the broken upstream repository before building.
+          # It removes all imports and usages of missing custom components and images.
           
-          # Remove import statements
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/import.*'@site\/components\//d"
+          # 1. Remove all import statements that reference missing files.
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/import.*'@site\//d"
 
-          # Remove component usages
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<Author/,/ \/>/d"
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<Image/,/ \/>/d"
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<CodeWithHighlights/,/ \/>/d"
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<ChartExample/,/ \/>/d"
-          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<GoogleImageChartsTutorialCallout/,/ \/>/d"
+          # 2. Remove all lines that use the broken components. This is safer than trying to parse the tags.
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<Author/d"
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<Image/d"
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<CodeWithHighlights/d"
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<ChartExample/d"
+          find ./documentation -type f \( -name "*.md" -o -name "*.mdx" \) -print0 | xargs -0 sed -i "/<GoogleImageChartsTutorialCallout/d"
       
       - name: Build website
         run: yarn build
